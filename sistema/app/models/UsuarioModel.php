@@ -1,71 +1,86 @@
 <?php
-include "../../config/conexao.php";
 
-function salvarUsuario($nome, $documento, $perfil, $senha) {
-    global $conn;
+class UsuarioModel {
+    private $conn;
 
-    $hash = password_hash($senha, PASSWORD_DEFAULT);
-
-    $stmt = $conn->prepare("INSERT INTO clientes (nome, documento, perfil, senha) VALUES (?, ?, ?, ?)");
-    $stmt->bind_param("ssss", $nome, $documento, $perfil, $hash);
-    $stmt->execute();
-
-    echo json_encode(["sucesso" => true]);
-}
-
-function excluirUsuario($id, $perfil_de_quem_esta_excluindo) {
-    global $conn;
-
-    $stmt = $conn->prepare("SELECT perfil FROM clientes WHERE ID_cliente = ?");
-    $stmt->bind_param("i", $id);
-    $stmt->execute();
-    $result = $stmt->get_result();
-    $usuario = $result->fetch_assoc();
-
-    if ($usuario['perfil'] == 'administrador' && $perfil_de_quem_esta_excluindo != 'administrador') {
-        echo json_encode(["erro" => "Gerência não pode excluir administrador"]);
-        return;
+    public function __construct($conn) {
+        $this->conn = $conn;
     }
 
-    $stmt = $conn->prepare("DELETE FROM clientes WHERE ID_cliente = ?");
-    $stmt->bind_param("i", $id);
-    $stmt->execute();
-
-    echo json_encode(["sucesso" => true]);
-}
-
-function listarUsuarios() {
-    global $conn;
-
-    $stmt = $conn->prepare("SELECT ID_cliente, nome, documento, perfil FROM clientes");
-    $stmt->execute();
-    $result = $stmt->get_result();
-
-    $usuarios = [];
-    while ($row = $result->fetch_assoc()) {
-        $usuarios[] = $row;
+    public function salvar($nome, $documento, $perfil, $senha) {
+        $hash = password_hash($senha, PASSWORD_DEFAULT);
+        $stmt = $this->conn->prepare(
+            "INSERT INTO clientes (nome, documento, perfil, senha) VALUES (?, ?, ?, ?)"
+        );
+        $stmt->bind_param("ssss", $nome, $documento, $perfil, $hash);
+        return $stmt->execute();
     }
 
-    return $usuarios;
-}
+    public function listar() {
+        $stmt = $this->conn->prepare(
+            "SELECT ID_cliente, nome, documento, perfil FROM clientes ORDER BY nome"
+        );
+        $stmt->execute();
+        $result = $stmt->get_result();
+        $usuarios = [];
+        while ($row = $result->fetch_assoc()) {
+            $usuarios[] = $row;
+        }
+        return $usuarios;
+    }
 
-function buscarPorId($id) {
-    global $conn;
+    public function buscarPorId($id) {
+        $stmt = $this->conn->prepare(
+            "SELECT ID_cliente, nome, documento, perfil FROM clientes WHERE ID_cliente = ?"
+        );
+        $stmt->bind_param("i", $id);
+        $stmt->execute();
+        return $stmt->get_result()->fetch_assoc();
+    }
 
-    $stmt = $conn->prepare("SELECT ID_cliente, nome, documento, perfil FROM clientes WHERE ID_cliente = ?");
-    $stmt->bind_param("i", $id);
-    $stmt->execute();
-    $result = $stmt->get_result();
+    public function editar($id, $nome, $documento, $perfil) {
+        $stmt = $this->conn->prepare(
+            "UPDATE clientes SET nome = ?, documento = ?, perfil = ? WHERE ID_cliente = ?"
+        );
+        $stmt->bind_param("sssi", $nome, $documento, $perfil, $id);
+        return $stmt->execute();
+    }
 
-    return $result->fetch_assoc();
-}
+    public function excluir($id, $perfil_de_quem_exclui) {
+        $stmt = $this->conn->prepare(
+            "SELECT perfil FROM clientes WHERE ID_cliente = ?"
+        );
+        $stmt->bind_param("i", $id);
+        $stmt->execute();
+        $alvo = $stmt->get_result()->fetch_assoc();
 
-function editarUsuario($id, $nome, $documento, $perfil) {
-    global $conn;
+        if (!$alvo) {
+            return ["erro" => "Usuário não encontrado."];
+        }
+        if ($alvo['perfil'] === 'administrador' && $perfil_de_quem_exclui !== 'administrador') {
+            return ["erro" => "Gerência não pode excluir um administrador."];
+        }
 
-    $stmt = $conn->prepare("UPDATE clientes SET nome = ?, documento = ?, perfil = ? WHERE ID_cliente = ?");
-    $stmt->bind_param("sssi", $nome, $documento, $perfil, $id);
-    $stmt->execute();
+        $stmt = $this->conn->prepare("DELETE FROM clientes WHERE ID_cliente = ?");
+        $stmt->bind_param("i", $id);
+        $stmt->execute();
+        return ["sucesso" => true];
+    }
 
-    echo json_encode(["sucesso" => true]);
+    public function documentoExiste($documento, $excluir_id = null) {
+        if ($excluir_id) {
+            $stmt = $this->conn->prepare(
+                "SELECT ID_cliente FROM clientes WHERE documento = ? AND ID_cliente != ?"
+            );
+            $stmt->bind_param("si", $documento, $excluir_id);
+        } else {
+            $stmt = $this->conn->prepare(
+                "SELECT ID_cliente FROM clientes WHERE documento = ?"
+            );
+            $stmt->bind_param("s", $documento);
+        }
+        $stmt->execute();
+        $stmt->store_result();
+        return $stmt->num_rows > 0;
+    }
 }
