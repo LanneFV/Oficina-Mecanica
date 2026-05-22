@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Oficina Mecânica — Sistema</title>
+  <style>
+    .panel-content { display: none; }
+    .panel-content.active { display: block; }
+  </style>
+</head>
+<body>
+
+  <h1>Oficina Mecânica - Sistema de Gerenciamento</h1>
+
+  <div>
+    <button onclick="trocarAba('login')">Entrar</button>
+    <button onclick="trocarAba('cadastro')">Cadastrar</button>
+  </div>
+  
+  <hr>
+
+  <div id="painel-login" class="panel-content active">
+    <h2>Login</h2>
+    
+    <div>
+      <label for="login-doc">Documento (CPF / CNPJ):</label><br>
+      <input type="text" id="login-doc" placeholder="000.000.000-00">
+    </div>
+    <br>
+    <div>
+      <label for="login-senha">Senha:</label><br>
+      <input type="password" id="login-senha" placeholder="Senha">
+    </div>
+    <br>
+    <button id="btn-login" onclick="fazerLogin()">Entrar no Sistema</button>
+    <div id="msg-login" style="display: none; margin-top: 10px; font-weight: bold;"></div>
+  </div>
+
+  <div id="painel-cadastro" class="panel-content">
+    <h2>Cadastro de Usuário</h2>
+    <p><em>O cadastro requer autenticação de Administrador.</em></p>
+
+    <h3>Dados do Administrador</h3>
+    <div>
+      <label for="adm-doc">Documento do Administrador:</label><br>
+      <input type="text" id="adm-doc">
+    </div>
+    <br>
+    <div>
+      <label for="adm-senha">Senha do Administrador:</label><br>
+      <input type="password" id="adm-senha">
+    </div>
+
+    <hr>
+    
+    <h3>Novo Usuário</h3>
+    <div>
+      <label for="cad-nome">Nome completo:</label><br>
+      <input type="text" id="cad-nome">
+    </div>
+    <br>
+    <div>
+      <label for="cad-doc">Documento (CPF / CNPJ):</label><br>
+      <input type="text" id="cad-doc">
+    </div>
+    <br>
+    <div>
+      <label for="cad-perfil">Perfil de acesso:</label><br>
+      <select id="cad-perfil">
+        <option value="">Selecione o perfil...</option>
+        <option value="administrador">Administrador</option>
+        <option value="gerencia">Gerência</option>
+        <option value="usuario">Usuário Comum</option>
+      </select>
+    </div>
+    <br>
+    <div>
+      <label for="cad-senha">Senha do novo usuário:</label><br>
+      <input type="password" id="cad-senha" placeholder="Mínimo 6 caracteres">
+    </div>
+    <br>
+    <button id="btn-cadastrar" onclick="fazerCadastro()">Cadastrar Usuário</button>
+    <div id="msg-cadastro" style="display: none; margin-top: 10px; font-weight: bold;"></div>
+  </div>
+
+<script>
+
+function trocarAba(aba) {
+  document.querySelectorAll('.panel-content').forEach(p => p.classList.remove('active'));
+  document.getElementById('painel-' + aba).classList.add('active');
+}
+
+function msg(id, texto) {
+  const el = document.getElementById(id);
+  el.textContent = texto;
+  el.style.display = 'block';
+  setTimeout(() => { el.style.display = 'none'; }, 4000);
+}
+
+function fazerLogin() {
+  const documento = document.getElementById('login-doc').value.trim();
+  const senha     = document.getElementById('login-senha').value.trim();
+  const btn       = document.getElementById('btn-login');
+
+  if (!documento || !senha) {
+    msg('msg-login', 'Preencha documento e senha.');
+    return;
+  }
+
+  btn.disabled = true;
+  btn.textContent = 'Verificando...';
+
+  fetch('login.php', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ documento, senha })
+  })
+  .then(res => res.json())
+  .then(data => {
+    if (data.sucesso) {
+      msg('msg-login', 'Login realizado! Redirecionando...');
+      setTimeout(() => window.location.href = 'dashboard.php', 1200);
+    } else {
+      msg('msg-login', data.erro || 'Credenciais inválidas.');
+    }
+  })
+  .catch(() => msg('msg-login', 'Erro de conexão com o servidor.'))
+  .finally(() => {
+    btn.disabled = false;
+    btn.textContent = 'Entrar no Sistema';
+  });
+}
+
+function fazerCadastro() {
+  const admDoc   = document.getElementById('adm-doc').value.trim();
+  const admSenha = document.getElementById('adm-senha').value.trim();
+  const nome     = document.getElementById('cad-nome').value.trim();
+  const doc      = document.getElementById('cad-doc').value.trim();
+  const perfil   = document.getElementById('cad-perfil').value;
+  const senha    = document.getElementById('cad-senha').value.trim();
+  const btn      = document.getElementById('btn-cadastrar');
+
+  if (!admDoc || !admSenha) {
+    msg('msg-cadastro', 'Informe as credenciais do administrador.');
+    return;
+  }
+  if (!nome || !doc || !perfil || !senha) {
+    msg('msg-cadastro', 'Preencha todos os dados do novo usuário.');
+    return;
+  }
+  if (senha.length < 6) {
+    msg('msg-cadastro', 'A senha deve ter pelo menos 6 caracteres.');
+    return;
+  }
+
+  btn.disabled = true;
+  btn.textContent = 'Cadastrando...';
+
+  fetch('login.php', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ documento: admDoc, senha: admSenha })
+  })
+  .then(res => res.json())
+  .then(authData => {
+    if (!authData.sucesso) {
+      msg('msg-cadastro', 'Autenticação do administrador falhou: ' + (authData.erro || 'credenciais inválidas.'));
+      btn.disabled = false;
+      btn.textContent = 'Cadastrar Usuário';
+      return;
+    }
+
+    return fetch('cadastrar.php', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ nome, documento: doc, perfil, senha })
+    });
+  })
+  .then(res => res ? res.json() : null)
+  .then(data => {
+    if (!data) return;
+
+    if (data.sucesso) {
+      msg('msg-cadastro', data.mensagem);
+      ['cad-nome','cad-doc','cad-senha'].forEach(id => document.getElementById(id).value = '');
+      document.getElementById('cad-perfil').value = '';
+    } else {
+      msg('msg-cadastro', data.erro || 'Erro ao cadastrar.');
+    }
+  })
+  .catch(() => msg('msg-cadastro', 'Erro de conexão com o servidor.'))
+  .finally(() => {
+    btn.disabled = false;
+    btn.textContent = 'Cadastrar Usuário';
+  });
+}
+
+document.addEventListener('keydown', e => {
+  if (e.key !== 'Enter') return;
+  if (document.getElementById('painel-login').classList.contains('active')) fazerLogin();
+  else fazerCadastro();
+});
+</script>
+</body>
+</html>
