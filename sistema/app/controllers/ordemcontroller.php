@@ -23,11 +23,63 @@ if ($method === 'GET') {
         ]);
         exit;
     }
+    if (isset($_GET['itens'])) {
+        $id_os = intval($_GET['id_os'] ?? 0);
+        if (!$id_os) { http_response_code(400); echo json_encode(['erro' => 'ID da OS inválido.']); exit; }
+        echo json_encode([
+            'pecas'    => $model->listarItensPecas($id_os),
+            'servicos' => $model->listarItensServicos($id_os),
+        ]);
+        exit;
+    }
     if ($perfil === 'usuario_comum') {
         echo json_encode($model->listarPorCliente(intval($_SESSION['id'])));
         exit;
     }
     echo json_encode($model->listar());
+    exit;
+}
+
+if ($method === 'PATCH') {
+    if ($perfil !== 'administrador' && $perfil !== 'gerencia') {
+        http_response_code(403); echo json_encode(['erro' => 'Acesso negado.']); exit;
+    }
+    $dados  = json_decode(file_get_contents('php://input'), true) ?? [];
+    $id_os  = intval($dados['id_os'] ?? 0);
+    $tipo   = $dados['tipo'] ?? '';
+    $acao   = $dados['acao'] ?? '';
+
+    if (!$id_os || !in_array($tipo, ['peca','servico']) || !in_array($acao, ['adicionar','remover'])) {
+        http_response_code(400); echo json_encode(['erro' => 'Dados inválidos.']); exit;
+    }
+
+    if ($tipo === 'peca') {
+        if ($acao === 'adicionar') {
+            $id_peca    = intval($dados['id_peca'] ?? 0);
+            $quantidade = intval($dados['quantidade'] ?? 0);
+            $preco      = floatval($dados['preco_venda'] ?? 0);
+            if (!$id_peca || $quantidade <= 0 || $preco < 0) {
+                http_response_code(400); echo json_encode(['erro' => 'Dados da peça inválidos.']); exit;
+            }
+            $ok = $model->adicionarPeca($id_os, $id_peca, $quantidade, $preco);
+        } else {
+            $ok = $model->removerPeca($id_os, intval($dados['id_peca'] ?? 0));
+        }
+    } else {
+        if ($acao === 'adicionar') {
+            $id_servico  = intval($dados['id_servico'] ?? 0);
+            $valor       = floatval($dados['valor_cobrado'] ?? 0);
+            $diagnostico = trim($dados['diagnostico_tecnico'] ?? '');
+            if (!$id_servico || $valor < 0) {
+                http_response_code(400); echo json_encode(['erro' => 'Dados do serviço inválidos.']); exit;
+            }
+            $ok = $model->adicionarServico($id_os, $id_servico, $valor, $diagnostico);
+        } else {
+            $ok = $model->removerServico($id_os, intval($dados['id_servico'] ?? 0));
+        }
+    }
+
+    echo json_encode($ok ? ['sucesso' => true] : ['erro' => 'Erro ao atualizar itens.']);
     exit;
 }
 

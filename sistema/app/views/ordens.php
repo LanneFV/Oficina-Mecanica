@@ -157,16 +157,16 @@ $nomeSessao   = htmlspecialchars($_SESSION['nome']);
                     <th>Placa</th>
                     <th>Cliente</th>
                     <th>Mecânico</th>
+                    <th>Serviços</th>
+                    <th>Peças</th>
                     <th>Abertura</th>
                     <th>Entrega Prevista</th>
                     <th>Garantia</th>
-                    <?php if ($perfilSessao === 'administrador'): ?>
                     <th>Ações</th>
-                    <?php endif; ?>
                 </tr>
             </thead>
             <tbody id="corpo-tabela">
-                <tr><td colspan="9" style="text-align:center;color:#888;padding:20px">Carregando...</td></tr>
+                <tr><td colspan="11" style="text-align:center;color:#888;padding:20px">Carregando...</td></tr>
             </tbody>
         </table>
     </div>
@@ -211,6 +211,86 @@ $nomeSessao   = htmlspecialchars($_SESSION['nome']);
     </div>
 </div>
 
+<!-- Modal Itens da OS -->
+<div id="modal-itens" class="modal-overlay">
+    <div class="modal" style="max-width:640px;">
+        <h3>Itens da OS <span id="itens-os-id" style="color:#6b7280;font-weight:normal;font-size:0.9rem;"></span></h3>
+        <div id="msg-itens" class="msg"></div>
+
+        <!-- Peças -->
+        <div style="margin-bottom:20px;">
+            <h4 style="font-size:0.95rem;color:#1a1a2e;margin-bottom:10px;">Peças</h4>
+            <table style="width:100%;border-collapse:collapse;font-size:0.85rem;margin-bottom:10px;">
+                <thead>
+                    <tr>
+                        <th style="text-align:left;padding:6px 8px;background:#f0f0f0;">Peça</th>
+                        <th style="text-align:left;padding:6px 8px;background:#f0f0f0;">Qtd</th>
+                        <th style="text-align:left;padding:6px 8px;background:#f0f0f0;">Preço Venda</th>
+                        <th style="padding:6px 8px;background:#f0f0f0;"></th>
+                    </tr>
+                </thead>
+                <tbody id="itens-pecas-lista"></tbody>
+            </table>
+            <div style="display:flex;gap:8px;align-items:flex-end;flex-wrap:wrap;">
+                <div>
+                    <label style="font-size:0.8rem;font-weight:600;display:block;margin-bottom:3px;">Peça</label>
+                    <select id="add-peca-id" style="width:180px;padding:6px;border:1px solid #d1d5db;border-radius:5px;font-size:0.85rem;margin-bottom:0;">
+                        <option value="">Selecione...</option>
+                    </select>
+                </div>
+                <div>
+                    <label style="font-size:0.8rem;font-weight:600;display:block;margin-bottom:3px;">Qtd</label>
+                    <input type="number" id="add-peca-qtd" min="1" value="1" style="width:70px;padding:6px;border:1px solid #d1d5db;border-radius:5px;font-size:0.85rem;margin-bottom:0;">
+                </div>
+                <div>
+                    <label style="font-size:0.8rem;font-weight:600;display:block;margin-bottom:3px;">Preço (R$)</label>
+                    <input type="number" id="add-peca-preco" min="0" step="0.01" placeholder="0.00" style="width:90px;padding:6px;border:1px solid #d1d5db;border-radius:5px;font-size:0.85rem;margin-bottom:0;">
+                </div>
+                <button onclick="adicionarPeca()" style="background:#1a1a2e;color:#fff;border:none;border-radius:5px;padding:7px 14px;font-size:0.85rem;font-weight:600;cursor:pointer;">+ Adicionar</button>
+            </div>
+        </div>
+
+        <hr style="border:none;border-top:1px solid #e5e5e5;margin-bottom:20px;">
+
+        <!-- Serviços -->
+        <div style="margin-bottom:10px;">
+            <h4 style="font-size:0.95rem;color:#1a1a2e;margin-bottom:10px;">Serviços</h4>
+            <table style="width:100%;border-collapse:collapse;font-size:0.85rem;margin-bottom:10px;">
+                <thead>
+                    <tr>
+                        <th style="text-align:left;padding:6px 8px;background:#f0f0f0;">Serviço</th>
+                        <th style="text-align:left;padding:6px 8px;background:#f0f0f0;">Valor</th>
+                        <th style="text-align:left;padding:6px 8px;background:#f0f0f0;">Diagnóstico</th>
+                        <th style="padding:6px 8px;background:#f0f0f0;"></th>
+                    </tr>
+                </thead>
+                <tbody id="itens-servicos-lista"></tbody>
+            </table>
+            <div style="display:flex;gap:8px;align-items:flex-end;flex-wrap:wrap;">
+                <div>
+                    <label style="font-size:0.8rem;font-weight:600;display:block;margin-bottom:3px;">Serviço</label>
+                    <select id="add-serv-id" style="width:180px;padding:6px;border:1px solid #d1d5db;border-radius:5px;font-size:0.85rem;margin-bottom:0;">
+                        <option value="">Selecione...</option>
+                    </select>
+                </div>
+                <div>
+                    <label style="font-size:0.8rem;font-weight:600;display:block;margin-bottom:3px;">Valor (R$)</label>
+                    <input type="number" id="add-serv-valor" min="0" step="0.01" placeholder="0.00" style="width:90px;padding:6px;border:1px solid #d1d5db;border-radius:5px;font-size:0.85rem;margin-bottom:0;">
+                </div>
+                <div>
+                    <label style="font-size:0.8rem;font-weight:600;display:block;margin-bottom:3px;">Diagnóstico</label>
+                    <input type="text" id="add-serv-diag" placeholder="Opcional" style="width:180px;padding:6px;border:1px solid #d1d5db;border-radius:5px;font-size:0.85rem;margin-bottom:0;">
+                </div>
+                <button onclick="adicionarServico()" style="background:#1a1a2e;color:#fff;border:none;border-radius:5px;padding:7px 14px;font-size:0.85rem;font-weight:600;cursor:pointer;">+ Adicionar</button>
+            </div>
+        </div>
+
+        <div class="modal-footer" style="margin-top:20px;">
+            <button class="btn-cancel" onclick="fecharModalItens()">Fechar</button>
+        </div>
+    </div>
+</div>
+
 <script>
 const perfil     = "<?= $perfilSessao ?>";
 const CONTROLLER = "../controllers/ordemcontroller.php";
@@ -240,7 +320,7 @@ function carregarOS() {
         .then(data => {
             const tbody = document.getElementById("corpo-tabela");
             if (!Array.isArray(data) || data.length === 0) {
-                tbody.innerHTML = '<tr><td colspan="9" style="text-align:center;color:#888;padding:20px">Nenhuma OS cadastrada.</td></tr>';
+                tbody.innerHTML = '<tr><td colspan="11" style="text-align:center;color:#888;padding:20px">Nenhuma OS cadastrada.</td></tr>';
                 return;
             }
             tbody.innerHTML = data.map(os => `
@@ -250,6 +330,8 @@ function carregarOS() {
                     <td>${os.placa}</td>
                     <td>${os.cliente}</td>
                     <td>${os.mecanico}</td>
+                    <td style="max-width:160px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis" title="${os.servicos ?? ''}">${os.servicos ?? '—'}</td>
+                    <td style="max-width:160px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis" title="${os.pecas ?? ''}">${os.pecas ?? '—'}</td>
                     <td>${os.data_abertura ? os.data_abertura.substring(0,10) : '-'}</td>
                     <td>${os.data_entrega_prevista ?? '-'}</td>
                     <td>${os.garantia_meses ? os.garantia_meses + ' mes(es)' : '-'}</td>
@@ -259,8 +341,14 @@ function carregarOS() {
                             onclick="abrirModalEditar(${os.ID_os},'${os.status}',${os.id_veiculo},${os.id_mecanico},'${os.data_entrega_prevista ?? ''}',${os.garantia_meses ?? 0})">
                             Editar
                         </button>
+                        <button style="background:#8b5cf6;color:#fff;cursor:pointer;border:none;border-radius:5px;padding:7px 14px;font-size:0.85rem;font-weight:600;"
+                            onclick="abrirModalItens(${os.ID_os})">Itens</button>
                         <button class="btn-delete" onclick="excluirOS(${os.ID_os})">Excluir</button>
-                    </td>` : ''}
+                    </td>` : `
+                    <td>
+                        <button style="background:#8b5cf6;color:#fff;cursor:pointer;border:none;border-radius:5px;padding:7px 14px;font-size:0.85rem;font-weight:600;"
+                            onclick="abrirModalItens(${os.ID_os})">Itens</button>
+                    </td>`}
                 </tr>
             `).join('');
         })
@@ -374,6 +462,171 @@ function excluirOS(id) {
         }
     })
     .catch(() => mostrarMsg("msg-lista", "Erro de conexão.", "err"));
+}
+
+// ── Itens da OS ──────────────────────────────────────────────────────────────
+let osAtiva = null;
+let catalogoPecas    = [];
+let catalogoServicos = [];
+
+function abrirModalItens(id_os) {
+    osAtiva = id_os;
+    document.getElementById("itens-os-id").textContent = "#" + id_os;
+    document.getElementById("msg-itens").style.display = "none";
+    document.getElementById("modal-itens").classList.add("open");
+    carregarItensPecasServicos();
+    carregarCatalogos();
+}
+
+function fecharModalItens() {
+    document.getElementById("modal-itens").classList.remove("open");
+    osAtiva = null;
+    carregarOS();
+}
+
+document.getElementById("modal-itens").addEventListener("click", function(e) {
+    if (e.target === this) fecharModalItens();
+});
+
+function msgItens(texto, tipo) {
+    const el = document.getElementById("msg-itens");
+    el.textContent = texto;
+    el.className = "msg " + tipo;
+    el.style.display = "block";
+    setTimeout(() => { el.style.display = "none"; }, 3000);
+}
+
+function formatarR(v) {
+    return parseFloat(v).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+}
+
+function carregarItensPecasServicos() {
+    fetch(CONTROLLER + "?itens=1&id_os=" + osAtiva)
+        .then(r => r.json())
+        .then(data => {
+            // Peças
+            const tbP = document.getElementById("itens-pecas-lista");
+            if (!data.pecas || data.pecas.length === 0) {
+                tbP.innerHTML = '<tr><td colspan="4" style="text-align:center;color:#888;padding:8px">Nenhuma peça.</td></tr>';
+            } else {
+                tbP.innerHTML = data.pecas.map(p => `
+                    <tr>
+                        <td style="padding:6px 8px;border-bottom:1px solid #eee">${p.nome}</td>
+                        <td style="padding:6px 8px;border-bottom:1px solid #eee">${p.quantidade}</td>
+                        <td style="padding:6px 8px;border-bottom:1px solid #eee">${formatarR(p.preco_venda)}</td>
+                        <td style="padding:6px 8px;border-bottom:1px solid #eee">
+                            ${perfil === 'administrador' || perfil === 'gerencia' ? `<button class="btn-delete" style="padding:3px 10px;font-size:0.8rem;" onclick="removerPeca(${p.ID_peca})">✕</button>` : ''}
+                        </td>
+                    </tr>`).join('');
+            }
+            // Serviços
+            const tbS = document.getElementById("itens-servicos-lista");
+            if (!data.servicos || data.servicos.length === 0) {
+                tbS.innerHTML = '<tr><td colspan="4" style="text-align:center;color:#888;padding:8px">Nenhum serviço.</td></tr>';
+            } else {
+                tbS.innerHTML = data.servicos.map(s => `
+                    <tr>
+                        <td style="padding:6px 8px;border-bottom:1px solid #eee">${s.descricao}</td>
+                        <td style="padding:6px 8px;border-bottom:1px solid #eee">${formatarR(s.valor_cobrado)}</td>
+                        <td style="padding:6px 8px;border-bottom:1px solid #eee;max-width:160px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap" title="${s.diagnostico_tecnico}">${s.diagnostico_tecnico || '—'}</td>
+                        <td style="padding:6px 8px;border-bottom:1px solid #eee">
+                            ${perfil === 'administrador' || perfil === 'gerencia' ? `<button class="btn-delete" style="padding:3px 10px;font-size:0.8rem;" onclick="removerServico(${s.ID_servico_ref})">✕</button>` : ''}
+                        </td>
+                    </tr>`).join('');
+            }
+        })
+        .catch(() => msgItens("Erro ao carregar itens.", "err"));
+}
+
+function carregarCatalogos() {
+    if (catalogoPecas.length === 0) {
+        fetch("../controllers/pecacontroller.php")
+            .then(r => r.json())
+            .then(data => {
+                catalogoPecas = data;
+                const sel = document.getElementById("add-peca-id");
+                sel.innerHTML = '<option value="">Selecione...</option>';
+                data.forEach(p => sel.innerHTML += `<option value="${p.ID_peca}">${p.nome}</option>`);
+            });
+    }
+    if (catalogoServicos.length === 0) {
+        fetch("../controllers/ServicoController.php")
+            .then(r => r.json())
+            .then(data => {
+                catalogoServicos = data;
+                const sel = document.getElementById("add-serv-id");
+                sel.innerHTML = '<option value="">Selecione...</option>';
+                data.forEach(s => sel.innerHTML += `<option value="${s.ID_servico_ref}">${s.descricao}</option>`);
+            });
+    }
+}
+
+function adicionarPeca() {
+    const id_peca    = parseInt(document.getElementById("add-peca-id").value);
+    const quantidade = parseInt(document.getElementById("add-peca-qtd").value);
+    const preco      = parseFloat(document.getElementById("add-peca-preco").value);
+    if (!id_peca || quantidade <= 0 || isNaN(preco)) {
+        msgItens("Preencha peça, quantidade e preço.", "err"); return;
+    }
+    fetch(CONTROLLER, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ id_os: osAtiva, tipo: "peca", acao: "adicionar", id_peca, quantidade, preco_venda: preco })
+    })
+    .then(r => r.json())
+    .then(data => {
+        if (data.sucesso) { msgItens("Peça adicionada.", "ok"); carregarItensPecasServicos(); }
+        else msgItens(data.erro || "Erro.", "err");
+    })
+    .catch(() => msgItens("Erro de conexão.", "err"));
+}
+
+function removerPeca(id_peca) {
+    if (!confirm("Remover esta peça da OS?")) return;
+    fetch(CONTROLLER, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ id_os: osAtiva, tipo: "peca", acao: "remover", id_peca })
+    })
+    .then(r => r.json())
+    .then(data => {
+        if (data.sucesso) carregarItensPecasServicos();
+        else msgItens(data.erro || "Erro.", "err");
+    });
+}
+
+function adicionarServico() {
+    const id_servico         = parseInt(document.getElementById("add-serv-id").value);
+    const valor_cobrado      = parseFloat(document.getElementById("add-serv-valor").value);
+    const diagnostico_tecnico = document.getElementById("add-serv-diag").value.trim();
+    if (!id_servico || isNaN(valor_cobrado)) {
+        msgItens("Preencha serviço e valor.", "err"); return;
+    }
+    fetch(CONTROLLER, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ id_os: osAtiva, tipo: "servico", acao: "adicionar", id_servico, valor_cobrado, diagnostico_tecnico })
+    })
+    .then(r => r.json())
+    .then(data => {
+        if (data.sucesso) { msgItens("Serviço adicionado.", "ok"); carregarItensPecasServicos(); }
+        else msgItens(data.erro || "Erro.", "err");
+    })
+    .catch(() => msgItens("Erro de conexão.", "err"));
+}
+
+function removerServico(id_servico) {
+    if (!confirm("Remover este serviço da OS?")) return;
+    fetch(CONTROLLER, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ id_os: osAtiva, tipo: "servico", acao: "remover", id_servico })
+    })
+    .then(r => r.json())
+    .then(data => {
+        if (data.sucesso) carregarItensPecasServicos();
+        else msgItens(data.erro || "Erro.", "err");
+    });
 }
 
 function fazerLogout() {
