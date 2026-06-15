@@ -36,6 +36,7 @@ class UsuarioModel {
     }
 
     public function excluir($id, $perfil_de_quem_exclui) {
+<<<<<<< HEAD
     $stmt = $this->conn->prepare("SELECT perfil FROM clientes WHERE ID_cliente = ?");
     $stmt->bind_param("i", $id);
     $stmt->execute();
@@ -44,6 +45,22 @@ class UsuarioModel {
     if (!$alvo) return ["erro" => "Usuário não encontrado."];
     if ($alvo['perfil'] === 'administrador' && $perfil_de_quem_exclui !== 'administrador') {
         return ["erro" => "Gerência não pode excluir um administrador."];
+=======
+        $stmt = $this->conn->prepare("SELECT perfil FROM clientes WHERE ID_cliente = ?");
+        $stmt->bind_param("i", $id);
+        $stmt->execute();
+        $alvo = $stmt->get_result()->fetch_assoc();
+
+        if (!$alvo) return ["erro" => "Usuário não encontrado."];
+        if ($alvo['perfil'] === 'administrador' && $perfil_de_quem_exclui !== 'administrador') {
+            return ["erro" => "Gerência não pode excluir um administrador."];
+        }
+
+        $stmt = $this->conn->prepare("DELETE FROM clientes WHERE ID_cliente = ?");
+        $stmt->bind_param("i", $id);
+        $stmt->execute();
+        return ["sucesso" => true];
+>>>>>>> 312ae0909b19e373a5aeda9cee24fac3c143bd6f
     }
 
     // busca veículos do cliente

@@ -58,6 +58,10 @@ function editar(id, nome, documento) {
 
 function excluir(id) {
     if (!confirm('Tem certeza que deseja excluir?')) return;
+<<<<<<< HEAD
+=======
+
+>>>>>>> 312ae0909b19e373a5aeda9cee24fac3c143bd6f
     fetch('../app/controllers/ClienteController.php', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -65,6 +69,7 @@ function excluir(id) {
     })
     .then(res => res.json())
     .then(data => {
+<<<<<<< HEAD
         if (data.sucesso) {
             carregarClientes();
         } else {
@@ -73,6 +78,19 @@ function excluir(id) {
             document.getElementById('msg-lista').style.display = 'block';
         }
     });
+=======
+        document.getElementById('mensagem').textContent = data.sucesso ? 'Excluído com sucesso!' : data.erro;
+        carregarClientes();
+    });
+}
+
+function limpar() {
+    document.getElementById('id_cliente').value = '';
+    document.getElementById('nome').value = '';
+    document.getElementById('documento').value = '';
+    document.getElementById('titulo-form').textContent = 'Cadastrar Cliente';
+    document.getElementById('mensagem').textContent = '';
+>>>>>>> 312ae0909b19e373a5aeda9cee24fac3c143bd6f
 }
 
 carregarClientes();
