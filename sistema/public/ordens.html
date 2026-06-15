@@ -191,28 +191,24 @@
 </div>
 
 <script>
-    const CONTROLLER = "../app/controllers/OrdemController.php";
 
-    // Lê dados da sessão via localStorage (gravados no login)
+    const CONTROLLER = "../app/controllers/ordemcontroller.php";
+
     const perfil = localStorage.getItem("perfil") || "";
     const nome   = localStorage.getItem("nome")   || "";
 
-    // Redireciona se não estiver logado
     if (!localStorage.getItem("id")) {
         window.location.href = "login.html";
     }
 
-    // Exibe info do usuário no header
     document.getElementById("info-usuario").innerHTML =
         `<strong>${nome}</strong> &nbsp;|&nbsp; <strong>${perfil}</strong>`;
 
-    // Mostra link de peças apenas para administrador
     if (perfil === "administrador") {
         document.getElementById("link-pecas").style.display = "inline";
         document.getElementById("col-acoes").style.display  = "table-cell";
     }
 
-    // Mostra botão "Nova OS" para administrador e gerência
     if (perfil === "administrador" || perfil === "gerencia") {
         document.getElementById("btn-nova-os").style.display = "inline-block";
     }

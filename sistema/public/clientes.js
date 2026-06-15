@@ -1,5 +1,5 @@
 function carregarClientes() {
-    fetch('../controllers/ClienteController.php?acao=listar')
+    fetch('../app/controllers/ClienteController.php?acao=listar')
         .then(res => res.json())
         .then(data => {
             let tabela = document.getElementById('tabela');
@@ -24,7 +24,7 @@ function salvar() {
     const id = document.getElementById('id_cliente').value;
     const acao = id ? 'editar' : 'salvar';
 
-    fetch('../controllers/ClienteController.php', {
+    fetch('../app/controllers/ClienteController.php', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -52,13 +52,16 @@ function editar(id, nome, documento) {
 function excluir(id) {
     if (!confirm('Tem certeza que deseja excluir?')) return;
 
-    fetch('../controllers/ClienteController.php', {
+    fetch('../app/controllers/ClienteController.php', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ acao: 'excluir', id: id })
     })
     .then(res => res.json())
-    .then(() => carregarClientes());
+    .then(data => {
+        document.getElementById('mensagem').textContent = data.sucesso ? 'Excluído com sucesso!' : data.erro;
+        carregarClientes();
+    });
 }
 
 function limpar() {

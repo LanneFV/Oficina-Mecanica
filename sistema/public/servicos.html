@@ -2,10 +2,10 @@
 <html>
 <head>
     <meta charset="UTF-8">
-    <title>Veículos — Oficina</title>
+    <title>Serviços — Oficina</title>
     <style>
         body { font-family: Arial, sans-serif; max-width: 900px; margin: 40px auto; }
-        input, select { padding: 8px; margin: 5px; width: 200px; }
+        input { padding: 8px; margin: 5px; width: 200px; }
         button { padding: 8px 16px; margin: 5px; cursor: pointer; }
         .btn-salvar  { background: #f5a623; border: none; color: white; border-radius: 4px; }
         .btn-editar  { background: #4a90d9; border: none; color: white; border-radius: 4px; }
@@ -18,19 +18,13 @@
 </head>
 <body>
 
-<h2>Gerenciamento de Veículos</h2>
+<h2>Catálogo de Serviços</h2>
 <a href="../app/views/dashboard.php">← Voltar</a>
 
-<h3 id="titulo-form">Cadastrar Veículo</h3>
-<input type="hidden" id="id_veiculo">
-<input type="text"   id="placa"      placeholder="Placa">
-<input type="number" id="ano"        placeholder="Ano">
-<select id="id_cliente">
-    <option value="">Selecione o Cliente</option>
-</select>
-<select id="id_modelo">
-    <option value="">Selecione o Modelo</option>
-</select>
+<h3 id="titulo-form">Cadastrar Serviço</h3>
+<input type="hidden" id="id_servico">
+<input type="text"   id="descricao"  placeholder="Descrição">
+<input type="number" id="preco_base" placeholder="Preço Base" step="0.01">
 <button class="btn-salvar" onclick="salvar()">Salvar</button>
 <button onclick="limpar()">Limpar</button>
 <p id="mensagem"></p>
@@ -39,16 +33,14 @@
     <thead>
         <tr>
             <th>ID</th>
-            <th>Placa</th>
-            <th>Ano</th>
-            <th>Cliente</th>
-            <th>Modelo</th>
+            <th>Descrição</th>
+            <th>Preço Base</th>
             <th>Ações</th>
         </tr>
     </thead>
     <tbody id="tabela"></tbody>
 </table>
 
-<script src="veiculos.js"></script>
+<script src="servicos.js"></script>
 </body>
 </html>

@@ -7,8 +7,8 @@
         body { font-family: Arial, sans-serif; max-width: 900px; margin: 40px auto; }
         input, select { padding: 8px; margin: 5px; width: 200px; }
         button { padding: 8px 16px; margin: 5px; cursor: pointer; }
-        .btn-salvar { background: #f5a623; border: none; color: white; border-radius: 4px; }
-        .btn-editar { background: #4a90d9; border: none; color: white; border-radius: 4px; }
+        .btn-salvar  { background: #f5a623; border: none; color: white; border-radius: 4px; }
+        .btn-editar  { background: #4a90d9; border: none; color: white; border-radius: 4px; }
         .btn-excluir { background: #d9534f; border: none; color: white; border-radius: 4px; }
         table { width: 100%; border-collapse: collapse; margin-top: 20px; }
         th, td { padding: 10px; border: 1px solid #ddd; text-align: left; }
@@ -19,10 +19,10 @@
 <body>
 
 <h2>Gerenciamento de Clientes</h2>
-<a href="dashboard.html">← Voltar</a>
+<a href="../app/views/dashboard.php">← Voltar</a>
 
 <h3 id="titulo-form">Cadastrar Cliente</h3>
-<input type="hidden"  id="id_cliente">
+<input type="hidden" id="id_cliente">
 <input type="text"   id="nome"      placeholder="Nome">
 <input type="text"   id="documento" placeholder="CPF/CNPJ">
 <button class="btn-salvar" onclick="salvar()">Salvar</button>

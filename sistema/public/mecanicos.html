@@ -2,7 +2,7 @@
 <html>
 <head>
     <meta charset="UTF-8">
-    <title>Veículos — Oficina</title>
+    <title>Mecânicos — Oficina</title>
     <style>
         body { font-family: Arial, sans-serif; max-width: 900px; margin: 40px auto; }
         input, select { padding: 8px; margin: 5px; width: 200px; }
@@ -18,18 +18,16 @@
 </head>
 <body>
 
-<h2>Gerenciamento de Veículos</h2>
+<h2>Gerenciamento de Mecânicos</h2>
 <a href="../app/views/dashboard.php">← Voltar</a>
 
-<h3 id="titulo-form">Cadastrar Veículo</h3>
-<input type="hidden" id="id_veiculo">
-<input type="text"   id="placa"      placeholder="Placa">
-<input type="number" id="ano"        placeholder="Ano">
-<select id="id_cliente">
-    <option value="">Selecione o Cliente</option>
-</select>
-<select id="id_modelo">
-    <option value="">Selecione o Modelo</option>
+<h3 id="titulo-form">Cadastrar Mecânico</h3>
+<input type="hidden" id="id_mecanico">
+<input type="text"   id="nome"          placeholder="Nome">
+<input type="text"   id="especialidade" placeholder="Especialidade">
+<select id="disponibilidade">
+    <option value="1">Disponível</option>
+    <option value="0">Indisponível</option>
 </select>
 <button class="btn-salvar" onclick="salvar()">Salvar</button>
 <button onclick="limpar()">Limpar</button>
@@ -39,16 +37,15 @@
     <thead>
         <tr>
             <th>ID</th>
-            <th>Placa</th>
-            <th>Ano</th>
-            <th>Cliente</th>
-            <th>Modelo</th>
+            <th>Nome</th>
+            <th>Especialidade</th>
+            <th>Disponibilidade</th>
             <th>Ações</th>
         </tr>
     </thead>
     <tbody id="tabela"></tbody>
 </table>
 
-<script src="veiculos.js"></script>
+<script src="mecanicos.js"></script>
 </body>
 </html>

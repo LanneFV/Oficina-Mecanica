@@ -39,14 +39,12 @@ class ClienteModel {
         if ($perfil_usuario_logado !== 'administrador') {
             return ["erro" => "Apenas administradores podem excluir registros."];
         }
-
         try {
             $stmt = $this->conn->prepare("DELETE FROM clientes WHERE ID_cliente = ?");
             $stmt->bind_param("i", $id);
             $ok = $stmt->execute();
             $stmt->close();
-            
-            return $ok ? ["sucesso" => true] : ["erro" => "Erro ao excluir cliente. Verifique as dependências."];
+            return $ok ? ["sucesso" => true] : ["erro" => "Erro ao excluir cliente."];
         } catch (Exception $e) {
             return ["erro" => "Não é possível excluir um cliente que possui veículos ou contatos vinculados."];
         }

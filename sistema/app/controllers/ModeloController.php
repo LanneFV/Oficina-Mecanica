@@ -14,13 +14,13 @@ if ($acao === 'listar') {
     $stmt = $conn->prepare("SELECT ID_modelo, nome FROM modelos ORDER BY nome");
     $stmt->execute();
     $result = $stmt->get_result();
-    
+
     $modelos = [];
     while ($row = $result->fetch_assoc()) {
         $modelos[] = $row;
     }
     $stmt->close();
-    
+
     echo json_encode($modelos);
     exit;
 }
