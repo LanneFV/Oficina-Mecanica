@@ -1,6 +1,4 @@
 <?php
-error_reporting(E_ALL);
-ini_set('display_errors', 1);
 if (session_status() === PHP_SESSION_NONE) session_start();
 header('Content-Type: application/json');
 
@@ -23,6 +21,10 @@ if ($method === 'GET') {
             'veiculos'  => $model->listarVeiculos(),
             'mecanicos' => $model->listarMecanicos(),
         ]);
+        exit;
+    }
+    if ($perfil === 'usuario_comum') {
+        echo json_encode($model->listarPorCliente(intval($_SESSION['id'])));
         exit;
     }
     echo json_encode($model->listar());

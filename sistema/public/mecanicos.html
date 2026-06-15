@@ -90,6 +90,7 @@
 </div>
 <script src="mecanicos.js"></script>
 <script>
+if (!localStorage.getItem('id')) { window.location.href = 'index.html'; }
 function fazerLogout() {
     fetch('../app/controllers/logoutcontroller.php', { method: 'POST' })
         .then(r => r.json())

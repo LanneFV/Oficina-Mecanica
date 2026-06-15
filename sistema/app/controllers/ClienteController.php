@@ -31,16 +31,15 @@ if ($acao === 'listar') {
 if ($acao === 'salvar') {
     $nome = trim($dados['nome'] ?? '');
     $documento = trim($dados['documento'] ?? '');
-    $id_endereco = 1;
-    $perfil = 'usuario_comum';
-    $senha = '123456';
 
     if (empty($nome) || empty($documento)) {
         echo json_encode(['erro' => 'Nome e documento são obrigatórios.']);
         exit;
     }
 
-    if ($model->salvar($nome, $documento, $id_endereco, $perfil, $senha)) {
+    $senha = bin2hex(random_bytes(8));
+
+    if ($model->salvar($nome, $documento, $senha)) {
         echo json_encode(['sucesso' => true]);
     } else {
         echo json_encode(['erro' => 'Erro ao salvar cliente.']);
@@ -52,15 +51,13 @@ if ($acao === 'editar') {
     $id = intval($dados['id'] ?? 0);
     $nome = trim($dados['nome'] ?? '');
     $documento = trim($dados['documento'] ?? '');
-    $id_endereco = 1;
-    $perfil = 'usuario_comum';
 
     if (!$id || empty($nome) || empty($documento)) {
         echo json_encode(['erro' => 'Dados incompletos para edição.']);
         exit;
     }
 
-    if ($model->editar($id, $nome, $documento, $id_endereco, $perfil)) {
+    if ($model->editar($id, $nome, $documento)) {
         echo json_encode(['sucesso' => true]);
     } else {
         echo json_encode(['erro' => 'Erro ao atualizar cliente.']);

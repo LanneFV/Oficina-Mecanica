@@ -60,9 +60,10 @@ $nomeSessao   = htmlspecialchars($_SESSION['nome']);
             font-size: 0.78rem;
             font-weight: 600;
         }
-        .badge-admin    { background: #fde68a; color: #92400e; }
-        .badge-gerencia { background: #bfdbfe; color: #1e40af; }
-        .badge-usuario  { background: #d1fae5; color: #065f46; }
+        .badge-admin      { background: #fde68a; color: #92400e; }
+        .badge-gerencia   { background: #bfdbfe; color: #1e40af; }
+        .badge-usuario    { background: #d1fae5; color: #065f46; }
+        .badge-cancelada  { background: #fee2e2; color: #991b1b; }
 
         button {
             cursor: pointer;
@@ -189,7 +190,27 @@ $nomeSessao   = htmlspecialchars($_SESSION['nome']);
 
     <?php else: ?>
     <div class="card">
-        <p>Bem-vindo ao sistema. Seu perfil é <strong>Usuário Comum</strong>.</p>
+        <div class="toolbar">
+            <h2>Minhas Ordens de Serviço</h2>
+        </div>
+        <div id="msg-lista" class="msg"></div>
+        <table>
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>Status</th>
+                    <th>Veículo</th>
+                    <th>Mecânico</th>
+                    <th>Serviços</th>
+                    <th>Abertura</th>
+                    <th>Entrega Prevista</th>
+                    <th>Garantia</th>
+                </tr>
+            </thead>
+            <tbody id="corpo-tabela-cliente">
+                <tr><td colspan="8" style="text-align:center;color:#888;padding:20px">Carregando...</td></tr>
+            </tbody>
+        </table>
     </div>
     <?php endif; ?>
 
@@ -395,6 +416,47 @@ function fazerLogout() {
 
 if (perfilSessao === "administrador" || perfilSessao === "gerencia") {
     carregarUsuarios();
+}
+
+if (perfilSessao === "usuario_comum") {
+    const badgeStatusCliente = (status) => {
+        const map = {
+            "aberta":       ["badge-admin",     "Aberta"],
+            "em andamento": ["badge-gerencia",  "Em Andamento"],
+            "concluida":    ["badge-usuario",   "Concluída"],
+            "cancelada":    ["badge-cancelada", "Cancelada"],
+        };
+        const [cls, label] = map[status] ?? ["", status];
+        return `<span class="badge ${cls}">${label}</span>`;
+    };
+
+    fetch("../controllers/ordemcontroller.php")
+        .then(r => r.json())
+        .then(data => {
+            const tbody = document.getElementById("corpo-tabela-cliente");
+            if (!Array.isArray(data) || data.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="8" style="text-align:center;color:#888;padding:20px">Nenhuma ordem de serviço encontrada.</td></tr>';
+                return;
+            }
+            tbody.innerHTML = data.map(os => `
+                <tr>
+                    <td>${os.ID_os}</td>
+                    <td>${badgeStatusCliente(os.status)}</td>
+                    <td>${os.marca} ${os.modelo} — ${os.placa}</td>
+                    <td>${os.mecanico}</td>
+                    <td style="max-width:200px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis" title="${os.servicos ?? ''}">${os.servicos ?? '—'}</td>
+                    <td>${os.data_abertura ? os.data_abertura.substring(0,10) : '—'}</td>
+                    <td>${os.data_entrega_prevista ?? '—'}</td>
+                    <td>${os.garantia_meses ? os.garantia_meses + ' mes(es)' : '—'}</td>
+                </tr>
+            `).join('');
+        })
+        .catch(() => {
+            const el = document.getElementById("msg-lista");
+            el.textContent = "Erro ao carregar ordens.";
+            el.className = "msg err";
+            el.style.display = "block";
+        });
 }
 </script>
 </body>

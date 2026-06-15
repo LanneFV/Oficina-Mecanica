@@ -9,6 +9,7 @@ class OrdemModel {
     public function listar() {
         $stmt = $this->conn->prepare("
             SELECT os.ID_os, os.status, os.data_abertura, os.data_entrega_prevista, os.garantia_meses,
+                   os.id_veiculo, os.id_mecanico,
                    v.placa, v.ano, mo.nome AS modelo, ma.nome_marca AS marca,
                    c.nome AS cliente, me.nome AS mecanico, me.especialidade
             FROM ordens_servicos os
@@ -57,6 +58,34 @@ class OrdemModel {
         $ok = $stmt->execute();
         $stmt->close();
         return $ok;
+    }
+
+    public function listarPorCliente($id_cliente) {
+        $stmt = $this->conn->prepare("
+            SELECT os.ID_os, os.status, os.data_abertura, os.data_entrega_prevista, os.garantia_meses,
+                   v.placa, mo.nome AS modelo, ma.nome_marca AS marca,
+                   me.nome AS mecanico,
+                   GROUP_CONCAT(DISTINCT sc.descricao ORDER BY sc.descricao SEPARATOR ', ') AS servicos
+            FROM ordens_servicos os
+            JOIN veiculos v   ON v.ID_veiculo    = os.id_veiculo
+            JOIN modelos  mo  ON mo.ID_modelo    = v.id_modelo
+            JOIN marcas   ma  ON ma.ID_marca     = mo.id_marca
+            JOIN mecanicos me ON me.ID_mecanico  = os.id_mecanico
+            LEFT JOIN itens_os_servicos ios ON ios.ID_os          = os.ID_os
+            LEFT JOIN servicos_catalagos sc ON sc.ID_servico_ref  = ios.ID_servico_ref
+            WHERE v.id_cliente = ?
+            GROUP BY os.ID_os
+            ORDER BY os.data_abertura DESC
+        ");
+        $stmt->bind_param("i", $id_cliente);
+        $stmt->execute();
+        $result = $stmt->get_result();
+        $ordens = [];
+        while ($row = $result->fetch_assoc()) {
+            $ordens[] = $row;
+        }
+        $stmt->close();
+        return $ordens;
     }
 
     public function listarVeiculos() {
