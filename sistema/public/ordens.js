@@ -35,7 +35,7 @@ function badgeStatus(status) {
 }
 
 function carregarOS() {
-    fetch(CONTROLLER)
+    fetch(CONTROLLER, { credentials: 'include' })
         .then(r => r.json())
         .then(data => {
             const tbody = document.getElementById("corpo-tabela");
@@ -67,7 +67,7 @@ function carregarOS() {
 }
 
 function carregarSelects() {
-    fetch(CONTROLLER + "?selects=1")
+    fetch(CONTROLLER + '?selects=1', { credentials: 'include' })
         .then(r => r.json())
         .then(data => {
             const sv = document.getElementById("m-veiculo");
@@ -139,6 +139,7 @@ function salvarOS() {
 
     fetch(CONTROLLER, {
         method,
+        credentials: 'include',
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(corpo)
     })
@@ -159,7 +160,8 @@ function salvarOS() {
 function excluirOS(id) {
     if (!confirm("Excluir esta OS?")) return;
     fetch(CONTROLLER, {
-        method: "DELETE",
+        method: 'DELETE',
+        credentials: 'include',
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ id })
     })
