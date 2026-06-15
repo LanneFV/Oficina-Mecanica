@@ -28,6 +28,15 @@ $nomeSessao   = htmlspecialchars($_SESSION['nome']);
             align-items: center;
         }
         header h1 { font-size: 1.2rem; }
+	nav a {
+    		color: #fff;
+    		text-decoration: none;
+    		margin-left: 18px;
+    		font-size: .9rem;
+    		opacity: .75;
+	}
+	nav a:hover { opacity: 1; }
+	nav a.ativa { opacity: 1; font-weight: 700; border-bottom: 2px solid #facc15; }	
 
         main { max-width: 900px; margin: 30px auto; padding: 0 16px; }
 
@@ -139,7 +148,7 @@ $nomeSessao   = htmlspecialchars($_SESSION['nome']);
             <a href="../../public/servicos.html" style="color:#fff;text-decoration:none;margin-left:16px;font-size:.9rem;">Serviços</a>
             <?php endif; ?>
         </nav>
-        <span style="font-size:.9rem;opacity:.85;">
+        <span nav style="font-size:.9rem;opacity:.85;">
             Olá, <strong><?= $nomeSessao ?></strong>
             &nbsp;|&nbsp; Perfil: <strong><?= htmlspecialchars($perfilSessao) ?></strong>
         </span>

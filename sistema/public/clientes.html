@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <title>Clientes — Oficina</title>
     <style>
-<<<<<<< HEAD
         * { box-sizing: border-box; margin: 0; padding: 0; }
         body { font-family: Arial, sans-serif; background: #f4f4f4; color: #333; }
         header { background: #1a1a2e; color: #fff; padding: 14px 24px; display: flex; justify-content: space-between; align-items: center; }
@@ -36,23 +35,9 @@
         label { display: block; font-size: 0.85rem; font-weight: 600; margin-bottom: 4px; }
         .modal input { width: 100%; margin-bottom: 14px; }
         .modal-footer { display: flex; gap: 10px; justify-content: flex-end; margin-top: 6px; }
-=======
-        body { font-family: Arial, sans-serif; max-width: 900px; margin: 40px auto; }
-        input, select { padding: 8px; margin: 5px; width: 200px; }
-        button { padding: 8px 16px; margin: 5px; cursor: pointer; }
-        .btn-salvar  { background: #f5a623; border: none; color: white; border-radius: 4px; }
-        .btn-editar  { background: #4a90d9; border: none; color: white; border-radius: 4px; }
-        .btn-excluir { background: #d9534f; border: none; color: white; border-radius: 4px; }
-        table { width: 100%; border-collapse: collapse; margin-top: 20px; }
-        th, td { padding: 10px; border: 1px solid #ddd; text-align: left; }
-        th { background: #f5a623; color: white; }
-        #mensagem { margin-top: 10px; }
->>>>>>> 312ae0909b19e373a5aeda9cee24fac3c143bd6f
     </style>
 </head>
 <body>
-
-<<<<<<< HEAD
 <header>
     <h1>Oficina Mecânica — Clientes</h1>
     <div style="display:flex;align-items:center;gap:16px;">
@@ -68,7 +53,6 @@
         <button class="btn-logout" onclick="fazerLogout()">Sair</button>
     </div>
 </header>
-
 <main>
     <div class="card">
         <div class="toolbar">
@@ -78,31 +62,12 @@
         <div id="msg-lista" class="msg"></div>
         <table>
             <thead>
-                <tr>
-                    <th>ID</th>
-                    <th>Nome</th>
-                    <th>Documento</th>
-                    <th>Perfil</th>
-                    <th>Ações</th>
-                </tr>
+                <tr><th>ID</th><th>Nome</th><th>Documento</th><th>Perfil</th><th>Ações</th></tr>
             </thead>
             <tbody id="tabela"></tbody>
         </table>
     </div>
 </main>
-=======
-<h2>Gerenciamento de Clientes</h2>
-<a href="../app/views/dashboard.php">← Voltar</a>
-
-<h3 id="titulo-form">Cadastrar Cliente</h3>
-<input type="hidden" id="id_cliente">
-<input type="text"   id="nome"      placeholder="Nome">
-<input type="text"   id="documento" placeholder="CPF/CNPJ">
-<button class="btn-salvar" onclick="salvar()">Salvar</button>
-<button onclick="limpar()">Limpar</button>
-<p id="mensagem"></p>
->>>>>>> 312ae0909b19e373a5aeda9cee24fac3c143bd6f
-
 <div id="modal-cliente" class="modal-overlay">
     <div class="modal">
         <h3 id="modal-titulo">Novo Cliente</h3>
@@ -118,7 +83,6 @@
         </div>
     </div>
 </div>
-
 <script src="clientes.js"></script>
 <script>
 function fazerLogout() {
@@ -127,7 +91,6 @@ function fazerLogout() {
         .then(() => { window.location.href = 'index.html'; })
         .catch(() => { window.location.href = 'index.html'; });
 }
-
 function abrirModal() {
     document.getElementById('modal-titulo').textContent = 'Novo Cliente';
     document.getElementById('modal-id').value = '';
@@ -136,7 +99,6 @@ function abrirModal() {
     document.getElementById('msg-modal').style.display = 'none';
     document.getElementById('modal-cliente').classList.add('open');
 }
-
 function fecharModal() {
     document.getElementById('modal-cliente').classList.remove('open');
 }
