@@ -125,9 +125,15 @@ $nomeSessao   = htmlspecialchars($_SESSION['nome']);
     <div style="display:flex;align-items:center;gap:16px;">
         <nav>
             <a href="dashboard.php">Usuários</a>
+            <?php if ($perfilSessao === 'administrador' || $perfilSessao === 'gerencia'): ?>
             <a href="ordens.php" class="ativa">Ordens</a>
-            <?php if ($perfilSessao === 'administrador'): ?>
             <a href="pecas.php">Peças</a>
+            <?php endif; ?>
+            <?php if ($perfilSessao === 'administrador'): ?>
+            <a href="../../public/clientes.html">Clientes</a>
+            <a href="../../public/veiculos.html">Veículos</a>
+            <a href="../../public/mecanicos.html">Mecânicos</a>
+            <a href="../../public/servicos.html">Serviços</a>
             <?php endif; ?>
         </nav>
         <span style="font-size:.9rem;opacity:.85;">
