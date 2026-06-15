@@ -17,11 +17,11 @@ com módulo completo de autenticação e controle de acesso por perfil.
 
 | Nome   |
 |--------|
-| Bianca | `
-| Yuri   | 
-| Luiz   | 
-| Giulia |  
-| Elane  | 
+| Bianca |
+| Yuri   |
+| Luiz   |
+| Giulia |
+| Elane  |
 
 ---
 
@@ -44,7 +44,7 @@ O banco `oficina` é composto pelas seguintes tabelas:
 - `ordens_servicos` — OS com status, datas e garantia
 - `pecas` — estoque de peças com preço unitário
 - `itens_os_pecas` — peças utilizadas por OS
-- `servicos_catalagos` — catálogo de serviços disponíveis
+- `servicos_catalogos` — catálogo de serviços disponíveis
 - `itens_os_servicos` — serviços executados por OS
 
 ---
@@ -73,6 +73,15 @@ O banco `oficina` é composto pelas seguintes tabelas:
 - [x] CRUD de peças com alerta de estoque baixo
 - [x] CRUD de ordens de serviço com status e garantia
 - [x] Interface responsiva com modais
+- [x] Script de backup automático do banco de dados (`backup.sh`)
+
+---
+
+## 📐 Regras de Negócio
+
+- **Integridade cliente–veículo:** não é possível excluir um cliente que possua veículos cadastrados, nem excluir um veículo vinculado a um cliente ativo. A exclusão exige que os registros dependentes sejam removidos primeiro.
+
+- **Ordens de serviço recorrentes:** um mesmo cliente ou veículo pode aparecer em múltiplas ordens de serviço, pois é comum que um veículo retorne à oficina para diferentes trabalhos ao longo do tempo. Cada OS é independente e registra seu próprio conjunto de serviços e peças.
 
 ---
 
@@ -81,6 +90,8 @@ O banco `oficina` é composto pelas seguintes tabelas:
 ```
 Oficina-Mecanica/
 ├── oficina.sql                  # Script de criação do banco
+├── backup.sh                    # Script de backup automático do banco
+├── backups/                     # Arquivos de backup gerados (.sql.gz)
 ├── sistema/
 │   ├── config/
 │   │   └── conexao.php          # Conexão com o banco de dados
@@ -153,6 +164,18 @@ $conn = new mysqli("127.0.0.1", "root", "", "oficina");
 6. Acesse o sistema:
 ```
 http://localhost/Oficina-Mecanica/sistema/public/index.html
+```
+
+---
+
+## 💾 Backup do banco de dados
+
+O projeto inclui um script `backup.sh` que gera backups automáticos comprimidos do banco `oficina` na pasta `backups/`, com nome no formato `oficina_YYYY-MM-DD_HH-MM-SS.sql.gz`.
+
+Para executar manualmente:
+```bash
+chmod +x backup.sh
+./backup.sh
 ```
 
 ---
