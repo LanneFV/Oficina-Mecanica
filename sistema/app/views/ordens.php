@@ -39,7 +39,7 @@ $nomeSessao   = htmlspecialchars($_SESSION['nome']);
         nav a:hover { opacity: 1; }
         nav a.ativa { opacity: 1; font-weight: 700; border-bottom: 2px solid #facc15; }
 
-        main { max-width: 1000px; margin: 30px auto; padding: 0 16px; }
+        main { max-width: 1200px; margin: 30px auto; padding: 0 16px; }
 
         .card {
             background: #fff;
@@ -149,6 +149,7 @@ $nomeSessao   = htmlspecialchars($_SESSION['nome']);
 
         <div id="msg-lista" class="msg"></div>
 
+        <div style="overflow-x: auto;">
         <table>
             <thead>
                 <tr>
@@ -169,6 +170,7 @@ $nomeSessao   = htmlspecialchars($_SESSION['nome']);
                 <tr><td colspan="11" style="text-align:center;color:#888;padding:20px">Carregando...</td></tr>
             </tbody>
         </table>
+        </div>
     </div>
 </main>
 
