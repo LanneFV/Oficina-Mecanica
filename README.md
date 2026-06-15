@@ -15,13 +15,13 @@ com módulo completo de autenticação e controle de acesso por perfil.
 
 ## 👥 Integrantes
 
-| Nome | Responsabilidade |
-|---|---|
-| Bianca | `login.html`, `clientes.html`, `veiculos.html`, `clientes.js`, `veiculos.js`, `index.html`, `script.js` |
-| Yuri | `ClienteController.php`, `VeiculoController.php`, `ClienteModel.php`, `VeiculoModel.php` |
-| Luiz | `OrdemController.php`, `PecaController.php`, `OrdemModel.php`, `PecaModel.php`, `ordens.php`, `pecas.php` |
-| Giulia | `MecanicoController.php`, `ServicoController.php`, `MecanicoModel.php`, `ServicoModel.php`, `mecanicos.html`, `servicos.html`, `mecanicos.js`, `servicos.js` |
-| Elane | `ordens.html`, `pecas.html` |
+| Nome   |
+|--------|
+| Bianca | `
+| Yuri   | 
+| Luiz   | 
+| Giulia |  
+| Elane  | 
 
 ---
 
