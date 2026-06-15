@@ -1,19 +1,19 @@
-function carregarClientes() {
-    fetch('../app/controllers/ClienteController.php?acao=listar')
+function carregarMecanicos() {
+    fetch('../app/controllers/MecanicoController.php?acao=listar')
         .then(res => res.json())
         .then(data => {
             let tabela = document.getElementById('tabela');
             tabela.innerHTML = '';
-            data.forEach(c => {
+            data.forEach(m => {
                 tabela.innerHTML += `
                     <tr>
-                        <td>${c.ID_cliente}</td>
-                        <td>${c.nome}</td>
-                        <td>${c.documento}</td>
-                        <td>${c.perfil}</td>
+                        <td>${m.ID_mecanico}</td>
+                        <td>${m.nome}</td>
+                        <td>${m.especialidade}</td>
+                        <td>${m.disponibilidade ? 'Disponível' : 'Indisponível'}</td>
                         <td style="display:flex;gap:6px;">
-                            <button class="btn-edit" onclick="editar(${c.ID_cliente}, '${c.nome}', '${c.documento}')">Editar</button>
-                            <button class="btn-delete" onclick="excluir(${c.ID_cliente})">Excluir</button>
+                            <button class="btn-edit" onclick="editar(${m.ID_mecanico}, '${m.nome}', '${m.especialidade}', ${m.disponibilidade})">Editar</button>
+                            <button class="btn-delete" onclick="excluir(${m.ID_mecanico})">Excluir</button>
                         </td>
                     </tr>`;
             });
@@ -24,21 +24,22 @@ function salvar() {
     const id = document.getElementById('modal-id').value;
     const acao = id ? 'editar' : 'salvar';
 
-    fetch('../app/controllers/ClienteController.php', {
+    fetch('../app/controllers/MecanicoController.php', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
             acao: acao,
             id: id,
             nome: document.getElementById('m-nome').value,
-            documento: document.getElementById('m-documento').value
+            especialidade: document.getElementById('m-especialidade').value,
+            disponibilidade: document.getElementById('m-disponibilidade').value
         })
     })
     .then(res => res.json())
     .then(data => {
         if (data.sucesso) {
             fecharModal();
-            carregarClientes();
+            carregarMecanicos();
         } else {
             document.getElementById('msg-modal').textContent = data.erro;
             document.getElementById('msg-modal').className = 'msg err';
@@ -47,26 +48,27 @@ function salvar() {
     });
 }
 
-function editar(id, nome, documento) {
-    document.getElementById('modal-titulo').textContent = 'Editar Cliente';
+function editar(id, nome, especialidade, disponibilidade) {
+    document.getElementById('modal-titulo').textContent = 'Editar Mecânico';
     document.getElementById('modal-id').value = id;
     document.getElementById('m-nome').value = nome;
-    document.getElementById('m-documento').value = documento;
+    document.getElementById('m-especialidade').value = especialidade;
+    document.getElementById('m-disponibilidade').value = disponibilidade;
     document.getElementById('msg-modal').style.display = 'none';
-    document.getElementById('modal-cliente').classList.add('open');
+    document.getElementById('modal-mecanico').classList.add('open');
 }
 
 function excluir(id) {
     if (!confirm('Tem certeza que deseja excluir?')) return;
-    fetch('../app/controllers/ClienteController.php', {
-        method: 'POST',
+    fetch('../app/controllers/MecanicoController.php', {
+        method: 'DELETE',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ acao: 'excluir', id: id })
+        body: JSON.stringify({ id: id })
     })
     .then(res => res.json())
     .then(data => {
         if (data.sucesso) {
-            carregarClientes();
+            carregarMecanicos();
         } else {
             document.getElementById('msg-lista').textContent = data.erro;
             document.getElementById('msg-lista').className = 'msg err';
@@ -75,4 +77,4 @@ function excluir(id) {
     });
 }
 
-carregarClientes();
+carregarMecanicos();

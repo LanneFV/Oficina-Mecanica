@@ -31,6 +31,9 @@ function fazerLogin() {
   .then(res => res.json())
   .then(data => {
     if (data.sucesso) {
+      localStorage.setItem('perfil', data.perfil);
+      localStorage.setItem('nome', data.nome);
+      localStorage.setItem('id', data.id);
       msg('msg-login', 'Login realizado! Redirecionando...');
       setTimeout(() => window.location.href = '../app/views/dashboard.php', 1200);
     } else {

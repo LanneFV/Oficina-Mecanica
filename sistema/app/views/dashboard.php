@@ -127,6 +127,18 @@ $nomeSessao   = htmlspecialchars($_SESSION['nome']);
 <header>
     <h1>Oficina Mecânica — Painel</h1>
     <div style="display:flex;align-items:center;gap:16px;">
+        <nav>
+            <?php if ($perfilSessao === 'administrador' || $perfilSessao === 'gerencia'): ?>
+            <a href="ordens.php" style="color:#fff;text-decoration:none;margin-left:16px;font-size:.9rem;">Ordens</a>
+            <a href="pecas.php" style="color:#fff;text-decoration:none;margin-left:16px;font-size:.9rem;">Peças</a>
+            <?php endif; ?>
+            <?php if ($perfilSessao === 'administrador'): ?>
+            <a href="../../public/clientes.html" style="color:#fff;text-decoration:none;margin-left:16px;font-size:.9rem;">Clientes</a>
+            <a href="../../public/veiculos.html" style="color:#fff;text-decoration:none;margin-left:16px;font-size:.9rem;">Veículos</a>
+            <a href="../../public/mecanicos.html" style="color:#fff;text-decoration:none;margin-left:16px;font-size:.9rem;">Mecânicos</a>
+            <a href="../../public/servicos.html" style="color:#fff;text-decoration:none;margin-left:16px;font-size:.9rem;">Serviços</a>
+            <?php endif; ?>
+        </nav>
         <span style="font-size:.9rem;opacity:.85;">
             Olá, <strong><?= $nomeSessao ?></strong>
             &nbsp;|&nbsp; Perfil: <strong><?= htmlspecialchars($perfilSessao) ?></strong>
@@ -192,7 +204,7 @@ $nomeSessao   = htmlspecialchars($_SESSION['nome']);
             <option value="">Selecione...</option>
             <option value="administrador">Administrador</option>
             <option value="gerencia">Gerência</option>
-            <option value="usuario">Usuário Comum</option>
+            <option value="usuario_comum">Usuário Comum</option>
         </select>
 
         <div id="campo-senha">
@@ -209,7 +221,7 @@ $nomeSessao   = htmlspecialchars($_SESSION['nome']);
 
 <script>
 const perfilSessao = "<?= $perfilSessao ?>";
-const CONTROLLER   = "../controllers/usuariocontroller.php";
+const CONTROLLER = "../controllers/usuariocontroller.php";
 
 function mostrarMsg(id, texto, tipo) {
     const el = document.getElementById(id);
@@ -220,8 +232,16 @@ function mostrarMsg(id, texto, tipo) {
 }
 
 function badgePerfil(perfil) {
-    const classes = { administrador: "badge-admin", gerencia: "badge-gerencia", usuario: "badge-usuario" };
-    const labels  = { administrador: "Administrador", gerencia: "Gerência", usuario: "Usuário Comum" };
+    const classes = { 
+        administrador: "badge-admin", 
+        gerencia: "badge-gerencia", 
+        usuario_comum: "badge-usuario"  
+    };
+    const labels = { 
+        administrador: "Administrador", 
+        gerencia: "Gerência", 
+        usuario_comum: "Usuário Comum"  
+    };
     return `<span class="badge ${classes[perfil] || ''}">${labels[perfil] || perfil}</span>`;
 }
 
@@ -358,8 +378,10 @@ function fazerLogout() {
     if (!confirm("Deseja sair do sistema?")) return;
     fetch("../controllers/logoutcontroller.php", { method: "POST" })
         .then(r => r.json())
-        .then(data => { if (data.sucesso) window.location.href = "login.php"; })
-        .catch(() => { window.location.href = "login.php"; });
+        .then(data => { 
+            if (data.sucesso) window.location.href = "../../public/index.html"; 
+        })
+        .catch(() => { window.location.href = "../../public/index.html"; });
 }
 
 if (perfilSessao === "administrador" || perfilSessao === "gerencia") {

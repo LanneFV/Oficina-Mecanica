@@ -1,10 +1,10 @@
 <?php
 if (session_status() === PHP_SESSION_NONE) session_start();
 
-require_once '../../config/conexao.php';   
+require_once '../../config/conexao.php';
 require_once '../models/AuthModel.php';
 
-header('Content-Type: application/json');  
+header('Content-Type: application/json');
 
 $json      = json_decode(file_get_contents('php://input'), true);
 $documento = trim($json['documento'] ?? $_POST['documento'] ?? '');

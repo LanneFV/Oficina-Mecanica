@@ -173,3 +173,6 @@ INSERT INTO itens_os_servicos (ID_os, ID_servico_ref, valor_cobrado, diagnostico
 	(1, 1, 160.00, 'Óleo muito escuro, troca necessária'),
 	(2, 2, 110.00, 'Pneus com desgaste irregular'),
 	(3, 3, 520.00, 'Revisão dos 50mil km');
+    
+USE oficina;
+UPDATE clientes SET senha = '$2y$10$XtlwheklyaqxrmBB6yQpDeG9PEIdaDhwXjvitUu4tinrGL0yri5qe';

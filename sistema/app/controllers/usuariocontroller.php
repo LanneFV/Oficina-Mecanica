@@ -15,7 +15,6 @@ $model  = new UsuarioModel($conn);
 $perfil = $_SESSION['perfil'];
 $method = $_SERVER['REQUEST_METHOD'];
 
-// ───── GET — listar usuários (admin e gerência) ─────
 if ($method === 'GET') {
     if ($perfil !== 'administrador' && $perfil !== 'gerencia') {
         http_response_code(403);
@@ -26,7 +25,6 @@ if ($method === 'GET') {
     exit;
 }
 
-
 if ($perfil !== 'administrador') {
     http_response_code(403);
     echo json_encode(['erro' => 'Apenas administradores podem realizar esta ação.']);
@@ -34,7 +32,6 @@ if ($perfil !== 'administrador') {
 }
 
 $dados = json_decode(file_get_contents('php://input'), true) ?? [];
-
 
 if ($method === 'POST') {
     foreach (['nome', 'documento', 'perfil', 'senha'] as $campo) {
@@ -45,10 +42,10 @@ if ($method === 'POST') {
         }
     }
 
-    $perfis_validos = ['administrador', 'gerencia', 'usuario'];
+    $perfis_validos = ['administrador', 'gerencia', 'usuario_comum'];
     if (!in_array($dados['perfil'], $perfis_validos)) {
         http_response_code(400);
-        echo json_encode(['erro' => 'Perfil inválido. Use: administrador, gerencia ou usuario.']);
+        echo json_encode(['erro' => 'Perfil inválido.']);
         exit;
     }
 
@@ -64,20 +61,13 @@ if ($method === 'POST') {
         exit;
     }
 
-    $ok = $model->salvar(
-        trim($dados['nome']),
-        trim($dados['documento']),
-        trim($dados['perfil']),
-        trim($dados['senha'])
-    );
-
+    $ok = $model->salvar(trim($dados['nome']), trim($dados['documento']), trim($dados['perfil']), trim($dados['senha']));
     echo json_encode($ok
         ? ['sucesso' => true, 'mensagem' => 'Usuário cadastrado com sucesso.']
         : ['erro' => 'Erro interno ao cadastrar usuário.']
     );
     exit;
 }
-
 
 if ($method === 'PUT') {
     $id = intval($dados['id'] ?? 0);
@@ -101,14 +91,9 @@ if ($method === 'PUT') {
     exit;
 }
 
-
 if ($method === 'DELETE') {
     $id = intval($dados['id'] ?? 0);
-    if (!$id) {
-        http_response_code(400);
-        echo json_encode(['erro' => 'ID inválido.']);
-        exit;
-    }
+    if (!$id) { http_response_code(400); echo json_encode(['erro' => 'ID inválido.']); exit; }
 
     if ($id === intval($_SESSION['id'])) {
         http_response_code(400);

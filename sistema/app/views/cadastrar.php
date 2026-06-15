@@ -26,7 +26,7 @@ $documento = trim($dados['documento']);
 $perfil    = trim($dados['perfil']);
 $senha     = trim($dados['senha']);
 
-$perfis_validos = ['administrador', 'gerencia', 'usuario'];
+$perfis_validos = ['administrador', 'gerencia', 'usuario_comum'];
 if (!in_array($perfil, $perfis_validos)) {
     http_response_code(400);
     echo json_encode(['erro' => 'Perfil inválido. Use: administrador, gerencia ou usuario.']);

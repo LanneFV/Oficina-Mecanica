@@ -191,7 +191,7 @@ $nomeSessao   = htmlspecialchars($_SESSION['nome']);
 
 <script>
 const perfil     = "<?= $perfilSessao ?>";
-const CONTROLLER = "../controllers/pecarcontroller.php";
+const CONTROLLER = "../controllers/pecacontroller.php";
 
 function mostrarMsg(id, texto, tipo) {
     const el = document.getElementById(id);

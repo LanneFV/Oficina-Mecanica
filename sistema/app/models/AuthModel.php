@@ -16,17 +16,20 @@ function login($documento, $senha) {
 
     if ($usuario && password_verify($senha, $usuario['senha'])) {
         session_regenerate_id(true);
-
         $_SESSION['id']     = $usuario['ID_cliente'];
         $_SESSION['nome']   = $usuario['nome'];
         $_SESSION['perfil'] = $usuario['perfil'];
-
-        echo json_encode(["sucesso" => true, "perfil" => $usuario['perfil']]);
+        echo json_encode([
+            "sucesso" => true,
+            "perfil"  => $usuario['perfil'],
+            "nome"    => $usuario['nome'],
+            "id"      => $usuario['ID_cliente']
+        ]);
     } else {
         http_response_code(401);
         echo json_encode(["erro" => "Documento ou senha incorretos."]);
     }
-    
+
     $stmt->close();
 }
 

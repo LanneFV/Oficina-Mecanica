@@ -23,7 +23,6 @@ if ($method === 'GET') {
         ]);
         exit;
     }
-
     echo json_encode($model->listar());
     exit;
 }
@@ -83,13 +82,6 @@ if ($method === 'PUT') {
         exit;
     }
 
-    $status_validos = ['aberta', 'em andamento', 'concluida', 'cancelada'];
-    if (!in_array($dados['status'], $status_validos)) {
-        http_response_code(400);
-        echo json_encode(['erro' => 'Status inválido.']);
-        exit;
-    }
-
     $ok = $model->editar(
         $id,
         trim($dados['status']),
@@ -123,7 +115,6 @@ if ($method === 'DELETE') {
     }
 
     $ok = $model->excluir($id);
-
     echo json_encode($ok
         ? ['sucesso' => true]
         : ['erro' => 'Erro ao excluir ordem de serviço.']

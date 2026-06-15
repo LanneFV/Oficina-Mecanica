@@ -31,7 +31,6 @@ if ($acao === 'listar') {
 if ($acao === 'salvar') {
     $nome = trim($dados['nome'] ?? '');
     $documento = trim($dados['documento'] ?? '');
-    
     $id_endereco = 1;
     $perfil = 'usuario_comum';
     $senha = '123456';

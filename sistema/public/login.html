@@ -23,11 +23,10 @@
 
 <script>
 function fazerLogin() {
-    fetch('../controllers/AuthController.php', {
+    fetch('../app/controllers/logincontroller.php', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-            acao: 'login',
             documento: document.getElementById('documento').value,
             senha: document.getElementById('senha').value
         })
@@ -35,7 +34,7 @@ function fazerLogin() {
     .then(res => res.json())
     .then(data => {
         if (data.sucesso) {
-            window.location.href = 'dashboard.html';
+            window.location.href = '../app/views/dashboard.php';
         } else {
             document.getElementById('erro').textContent = data.erro;
         }

@@ -2,7 +2,7 @@
 <html>
 <head>
     <meta charset="UTF-8">
-    <title>Veículos — Oficina</title>
+    <title>Mecânicos — Oficina</title>
     <style>
         * { box-sizing: border-box; margin: 0; padding: 0; }
         body { font-family: Arial, sans-serif; background: #f4f4f4; color: #333; }
@@ -40,15 +40,15 @@
 <body>
 
 <header>
-    <h1>Oficina Mecânica — Veículos</h1>
+    <h1>Oficina Mecânica — Mecânicos</h1>
     <div style="display:flex;align-items:center;gap:16px;">
         <nav>
             <a href="../app/views/dashboard.php">Painel</a>
             <a href="../app/views/ordens.php">Ordens</a>
             <a href="../app/views/pecas.php">Peças</a>
             <a href="clientes.html">Clientes</a>
-            <a href="veiculos.html" class="ativa">Veículos</a>
-            <a href="mecanicos.html">Mecânicos</a>
+            <a href="veiculos.html">Veículos</a>
+            <a href="mecanicos.html" class="ativa">Mecânicos</a>
             <a href="servicos.html">Serviços</a>
         </nav>
         <button class="btn-logout" onclick="fazerLogout()">Sair</button>
@@ -58,18 +58,17 @@
 <main>
     <div class="card">
         <div class="toolbar">
-            <h2>Gerenciamento de Veículos</h2>
-            <button class="btn-primary" onclick="abrirModal()">+ Novo Veículo</button>
+            <h2>Gerenciamento de Mecânicos</h2>
+            <button class="btn-primary" onclick="abrirModal()">+ Novo Mecânico</button>
         </div>
         <div id="msg-lista" class="msg"></div>
         <table>
             <thead>
                 <tr>
                     <th>ID</th>
-                    <th>Placa</th>
-                    <th>Ano</th>
-                    <th>Cliente</th>
-                    <th>Modelo</th>
+                    <th>Nome</th>
+                    <th>Especialidade</th>
+                    <th>Disponibilidade</th>
                     <th>Ações</th>
                 </tr>
             </thead>
@@ -78,19 +77,20 @@
     </div>
 </main>
 
-<div id="modal-veiculo" class="modal-overlay">
+<div id="modal-mecanico" class="modal-overlay">
     <div class="modal">
-        <h3 id="modal-titulo">Novo Veículo</h3>
+        <h3 id="modal-titulo">Novo Mecânico</h3>
         <input type="hidden" id="modal-id">
         <div id="msg-modal" class="msg"></div>
-        <label>Placa</label>
-        <input type="text" id="m-placa" placeholder="Placa">
-        <label>Ano</label>
-        <input type="number" id="m-ano" placeholder="Ano">
-        <label>Cliente</label>
-        <select id="m-cliente"><option value="">Selecione o Cliente</option></select>
-        <label>Modelo</label>
-        <select id="m-modelo"><option value="">Selecione o Modelo</option></select>
+        <label>Nome</label>
+        <input type="text" id="m-nome" placeholder="Nome">
+        <label>Especialidade</label>
+        <input type="text" id="m-especialidade" placeholder="Especialidade">
+        <label>Disponibilidade</label>
+        <select id="m-disponibilidade">
+            <option value="1">Disponível</option>
+            <option value="0">Indisponível</option>
+        </select>
         <div class="modal-footer">
             <button class="btn-cancel" onclick="fecharModal()">Cancelar</button>
             <button class="btn-primary" onclick="salvar()">Salvar</button>
@@ -98,7 +98,7 @@
     </div>
 </div>
 
-<script src="veiculos.js"></script>
+<script src="mecanicos.js"></script>
 <script>
 function fazerLogout() {
     fetch('../app/controllers/logoutcontroller.php', { method: 'POST' })
@@ -108,18 +108,17 @@ function fazerLogout() {
 }
 
 function abrirModal() {
-    document.getElementById('modal-titulo').textContent = 'Novo Veículo';
+    document.getElementById('modal-titulo').textContent = 'Novo Mecânico';
     document.getElementById('modal-id').value = '';
-    document.getElementById('m-placa').value = '';
-    document.getElementById('m-ano').value = '';
-    document.getElementById('m-cliente').value = '';
-    document.getElementById('m-modelo').value = '';
+    document.getElementById('m-nome').value = '';
+    document.getElementById('m-especialidade').value = '';
+    document.getElementById('m-disponibilidade').value = '1';
     document.getElementById('msg-modal').style.display = 'none';
-    document.getElementById('modal-veiculo').classList.add('open');
+    document.getElementById('modal-mecanico').classList.add('open');
 }
 
 function fecharModal() {
-    document.getElementById('modal-veiculo').classList.remove('open');
+    document.getElementById('modal-mecanico').classList.remove('open');
 }
 </script>
 </body>
