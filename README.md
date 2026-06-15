@@ -19,7 +19,8 @@ com módulo completo de autenticação e controle de acesso por perfil.
 |--------|
 | Bianca | `
 | Yuri   | 
-| Luiz   |  
+| Luiz   | 
+| Giulia |  
 | Elane  | 
 
 ---
